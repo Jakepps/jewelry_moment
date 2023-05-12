@@ -67,12 +67,6 @@ class CustomerListController
   end
 
   def refresh_data(page, per_page)
-    # begin
-    #   @data_list = @student_rep.paginated_short_students(page, per_page, @data_list)
-    #   @view.update_student_count(@student_rep.student_count)
-    # rescue
-    #   on_db_conn_error
-    # end
     items = @publisher_rep.get_list(per_page, page, @sort_by, 'ASC', @email_filter)
     @state_notifier.set_all(items)
     @view.update_student_count(@publisher_rep.count)

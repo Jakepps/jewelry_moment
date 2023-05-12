@@ -21,11 +21,6 @@ class MainWindow
         tab_item('Заказчики') {
           CustomerListView.new.create
         }
-        #
-        #
-        # tab_item('Студенты') {
-        #   @view_tab_students.create
-        # }
       }
     }
   end

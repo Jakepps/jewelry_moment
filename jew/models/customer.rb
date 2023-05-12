@@ -19,19 +19,19 @@ class Customer
 
   def validate_null(name, value)
     if value.nil?
-      raise ArgumentError, "Аргумент '#{name}' не может быть нулевым"
+      raise ArgumentError, "The argument '#{name}' cannot be null"
     end
   end
 
   def validate_name_length(name)
     if name.length > 100
-      raise ArgumentError, "Имя содержит более 100 символов: #{name}"
+      raise ArgumentError, "The number of characters in the name exceeds 100: #{name}"
     end
   end
 
   def validate_email(email)
     if email && !email.match?(EMAIL_REGEX)
-      raise ArgumentError, "Недопустимый формат электронной почты: #{email}"
+      raise ArgumentError, "Invalid email format: #{email}"
     end
   end
 end

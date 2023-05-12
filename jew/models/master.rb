@@ -18,14 +18,14 @@ class Master
 
   def validate_null(name, value)
     if value.nil?
-      raise ArgumentError, "Аргумент '#{name}' не может быть нулевым"
+      raise ArgumentError, "The argument '#{name}' cannot be null"
     end
   end
 
   def validate_name_length(first_name, last_name, father_name)
     [first_name, last_name, father_name].each do |name|
       if name && name.length > 50
-        raise ArgumentError, "Количество символов в имени превышает 50: #{name}"
+        raise ArgumentError, "The number of characters in the name exceeds 50: #{name}"
       end
     end
   end

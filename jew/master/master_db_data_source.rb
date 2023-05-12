@@ -6,21 +6,12 @@ class MasterDBDataSource
     @client = DBClient.instance
   end
 
-  # def add(master)
-  #   query = "INSERT INTO Master (FirstName, LastName, FatherName) VALUES ('#{master.first_name}', '#{master.last_name}', #{master.father_name.nil? ? 'NULL' : "'#{master.father_name}'"})"
-  #   @client.query(query)
-  # end
-
-
-
-
   def add(master)
     query = "INSERT INTO Master (FirstName, LastName, FatherName) VALUES ('#{master.first_name}', '#{master.last_name}', #{master.father_name.nil? ? 'NULL' : "'#{master.father_name}'"})"
     @client.query(query)
     master_id = @client.last_id
     get(master_id)
   end
-
 
   def change(master)
     query = "UPDATE Master SET FirstName='#{master.first_name}', LastName='#{master.last_name}', FatherName=#{master.father_name.nil? ? 'NULL' : "'#{master.father_name}'"} WHERE MasterID=#{master.master_id}"
@@ -42,19 +33,6 @@ class MasterDBDataSource
       nil
     end
   end
-
-  # def get_list(page_size, page_num, sort_field, sort_direction)
-  #   offset = (page_num - 1) * page_size
-  #   query = "SELECT * FROM Master ORDER BY #{sort_field} #{sort_direction} LIMIT #{page_size} OFFSET #{offset}"
-  #   results = @client.query(query)
-  #
-  #   masters = []
-  #   results.each do |result|
-  #     masters << Master.new(result[:'MasterID'], result[:'FirstName'], result[:'LastName'], result[:'FatherName'])
-  #   end
-  #
-  #   masters
-  # end
 
   def get_list(page_size, page_num, sort_field, sort_direction, has_father_name = nil)
     offset = (page_num - 1) * page_size
