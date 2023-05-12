@@ -1,3 +1,0 @@
-DROP DATABASE jewelry;
-
-CREATE DATABASE jewelry;
