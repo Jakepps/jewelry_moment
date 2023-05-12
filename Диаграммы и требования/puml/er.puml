@@ -1,0 +1,30 @@
+@startuml
+
+entity Master {
+  +MasterID [PK]
+  --
+  FirstName
+  LastName
+  FatherName
+}
+
+entity Customer {
+  +CustomerID [PK]
+  --
+  Name
+  Email
+}
+
+entity Product {
+  +ProductID [PK]
+  --
+  Title
+  --
+  +MasterID [FK]
+  +CustomerID [FK]
+}
+
+Master --{ Product
+Customer --{ Product
+
+@enduml

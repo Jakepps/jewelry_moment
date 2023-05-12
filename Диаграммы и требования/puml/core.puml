@@ -1,0 +1,103 @@
+@startuml
+@startuml
+class MasterDBDataSource {
+- client: DBClient
++ initialize()
++ add(master: Master): Master
++ change(master: Master): Master
++ delete(id: int): void
++ get(id: int): Master
++ get_list(page_size: int, page_num: int, sort_field: string, sort_direction: string, has_father_name: bool = nil): Master[]
++ count(): int
+}
+
+class CustomerDBDataSource {
+- client: DBClient
++ initialize()
++ add(customer: Customer): Customer
++ change(customer: Customer): Customer
++ delete(id: int): void
++ get(id: int): Customer
++ get_list(page_size: int, page_num: int, sort_field: string, sort_direction: string, has_email: bool = nil): Customer[]
++ count(): int
+}
+
+class ProductDBDataSource {
+- client: DBClient
++ initialize()
++ add(product: Product): Product
++ change(product: Product): Product
++ delete(id: int): void
++ get(id: int): Product
++ get_list(page_size: int, page_num: int, sort_field: string, sort_direction: string, master_id: int = nil, customer_id: int = nil, min_year: int = nil, max_year: int = nil): Product[]
++ count(master_id: int = nil, customer_id: int = nil, min_year: int = nil, max_year: int = nil): int
+}
+
+class DBClient {
+- connection: Mysql2::Client
+- last_id: int
+- initialize()
++ query(query: string): Mysql2::Result
++ last_id(): int
+}
+
+class Master {
+  - master_id
+  - first_name
+  - last_name
+  - father_name
+
+  + initialize(master_id, first_name, last_name, father_name = nil)
+  - validate_null(name, value)
+  - validate_name_length(first_name, last_name, father_name)
+}
+
+class Product {
+  - product_id
+  - title
+  - master_id
+  - customer_id
+
+  + initialize(product_id, title, master_id, customer_id)
+  - validate_null(name, value)
+  - validate_title_length(title)
+}
+
+class Customer {
+  EMAIL_REGEX
+  - customer_id
+  - name
+  - email
+
+  + initialize(customer_id, name, email = nil)
+  - validate_null(name, value)
+  - validate_name_length(name)
+  - validate_email(email)
+}
+class ListStateNotifier {
+  - items: Array
+  - listeners: Array
+  + initialize()
+  + set_all(objects: Array)
+  + add(object: Object)
+  + get(number: Integer): Object
+  + delete(object: Object)
+  + replace(object: Object, new_object: Object)
+  + add_listener(listener: Object)
+  + delete_listener(listener: Object)
+  - notify_listeners()
+}
+
+Master  --o Product
+Product o-- Customer
+MasterDBDataSource o-- DBClient
+CustomerDBDataSource o-- DBClient
+ProductDBDataSource o-- DBClient
+MasterDBDataSource ..> Master
+CustomerDBDataSource ..> Customer
+ProductDBDataSource ..> Product
+
+
+
+
+@enduml

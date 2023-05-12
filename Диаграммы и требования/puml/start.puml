@@ -1,0 +1,74 @@
+@startuml
+participant "main.rb"                       as main
+
+
+
+
+boundary    "mw: MainWindow"                as mw
+boundary    "ts: MasterListView"               as ts
+control     "tsc: MasterListController"    as tsc
+entity      "dlss: ListStateNotifier"    as dlss
+entity      "srep: MasterDBDataSource"       as srep
+entity      "dbsa: DBSourceAdapter"         as dbsa
+entity      "DBClient"            as dbds
+
+database    DB                              as db
+
+main -> mw : <<new>>
+mw -> ts : <<new>>
+ts -> tsc : <<new>>(self)
+tsc -> dlss : <<new>>(Array)
+dlss --> tsc
+tsc -> dlss : add_listener(MasterListView)
+dlss --> tsc
+tsc --> ts
+ts --> mw
+mw --> main
+
+main -> mw : create()
+mw -> ts : create()
+ts -> tsc : on_view_created()
+tsc -> dbsa : <<new>>
+dbsa -> dbds : <<instance>>
+dbds -> dbds : <<new>>
+dbds -> db : [connect]
+db --> dbds
+dbds --> dbsa
+dbsa --> tsc
+tsc -> srep : <<new>>(DBSourceAdapter)
+srep --> tsc
+tsc --> ts
+
+ts -> tsc : refresh_data(Integer, Integer)
+tsc -> srep : get_list(Integer, Integer, ListStateNotifier)
+srep -> dbsa : get_list(Integer, Integer, ListStateNotifier)
+dbsa -> dbds : prepare_exec(String, Integer, Integer)
+dbds -> db : [SELECT]
+db --> dbds
+dbds --> dbsa
+dbsa -> dlss : <<new>>(Array)
+dlss --> dbsa
+dbsa -> dlss : replace_objects(Array)
+dlss -> ts : update(ListStateNotifier)
+ts --> dlss
+dlss --> dbsa
+dbsa --> srep
+srep --> tsc
+
+tsc -> srep : master_count()
+srep -> dbsa : master_count()
+dbsa -> dbds: query(String)
+dbds -> db : [SELECT]
+db --> dbds
+dbds --> dbsa
+dbsa --> srep
+srep --> tsc
+tsc -> ts : update_master_count(Integer)
+ts --> tsc
+tsc --> ts
+ts --> mw
+mw --> main
+
+
+
+@enduml

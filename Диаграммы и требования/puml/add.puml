@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+
+actor       Пользователь                        as user
+boundary    "ts: MasterListView"                   as ts
+control     "tsс: MasterListController"        as tsc
+boundary    "sif: MasterInputForm"             as sif
+control     "sifcc: MasterInputFormControllerCreate"  as sifcc
+entity      "srep: MasterDBDataSource"           as srep
+
+user -> ts : Клик на <<Добавить>>
+ts -> tsc : show_modal_add
+tsc -> sifcc : <<new>>
+sifcc --> tsc
+tsc -> sif : <<new>>
+sif --> tsc
+tsc -> sifcc : set_view
+sifcc --> tsc
+tsc -> sif : create
+sif -> sifcc : on_view_created
+sifcc -> srep : <<new>>
+srep --> sifcc
+sifcc --> sif
+sif --> tsc
+tsc -> sif : show
+sif --> tsc
+tsc --> ts
+ts --> user
+
+user -> sif : Клик на <<Сохранить>>
+sif -> sifcc : process_fields
+sifcc -> srep : add_master
+srep --> sifcc
+sifcc -> sif : close
+sif --> sifcc
+sifcc --> sif
+sif --> user
+
+
+@enduml
