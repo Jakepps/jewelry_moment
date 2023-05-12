@@ -19,13 +19,13 @@ class Product
 
   def validate_null(name, value)
     if value.nil?
-      raise ArgumentError, "Аргумент '#{name}' не может быть нулевым"
+      raise ArgumentError, "Argument  '#{name}' cannot be null"
     end
   end
 
   def validate_title_length(title)
     if title.length > 255
-      raise ArgumentError, "Заголовок содержит более 255 символов: #{title}"
+      raise ArgumentError, "The title contains more than 255 characters: #{title}"
     end
   end
 end
