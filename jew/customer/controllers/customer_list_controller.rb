@@ -11,6 +11,7 @@ class CustomerListController
 
   attr_reader :state_notifier
   def initialize(view)
+    LoggerHolder.instance.debug('CustomerListController: init start')
     @view = view
     @state_notifier = ListStateNotifier.new
     @state_notifier.add_listener(@view)
@@ -21,6 +22,7 @@ class CustomerListController
 
     @email_filter_columns = [nil, true, false]
     @email_filter = @email_filter_columns.first
+    LoggerHolder.instance.debug('CustomerListController: init done')
   end
 
 
@@ -38,6 +40,7 @@ class CustomerListController
   end
 
   def show_modal_add
+    LoggerHolder.instance.debug('CustomerListController: showing modal (add)')
     controller = CustomerInputFormControllerCreate.new(self)
     view = CustomerInputForm.new(controller)
     controller.set_view(view)
@@ -57,6 +60,7 @@ class CustomerListController
 
   def delete_selected(current_page, per_page, selected_row)
     begin
+      LoggerHolder.instance.debug('CustomerListController: deleting selected master')
       item = @state_notifier.get(selected_row)
       @publisher_rep.delete(item.publisher_id)
       @state_notifier.delete(item)
@@ -67,6 +71,7 @@ class CustomerListController
   end
 
   def refresh_data(page, per_page)
+    LoggerHolder.instance.debug('CustomerListController: refreshing data...')
     items = @publisher_rep.get_list(per_page, page, @sort_by, 'ASC', @email_filter)
     @state_notifier.set_all(items)
     @view.update_student_count(@publisher_rep.count)
@@ -85,7 +90,9 @@ class CustomerListController
 
   private
 
-  def on_db_conn_error
+  def on_db_conn_error(error)
+    LoggerHolder.instance.error('CustomerListController: DB connection error:')
+    LoggerHolder.instance.error(error.message)
     api = Win32API.new('user32', 'MessageBox', ['L', 'P', 'P', 'L'], 'I')
     api.call(0, "No connection to DB", "Error", 0)
     exit(false)

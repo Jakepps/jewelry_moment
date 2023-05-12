@@ -4,6 +4,7 @@ require 'glimmer-dsl-libui'
 require_relative '../controllers/master_list_controller'
 require_relative '../controllers/master_controller'
 require_relative 'master_input_form'
+require './jew/util/logger_holder'
 
 class MasterListView
   include Glimmer
@@ -14,6 +15,7 @@ class MasterListView
     @controller = MasterListController.new(self)
     @current_page = 1
     @total_count = 0
+    LoggerHolder.instance.debug('MasterListView: initialize')
   end
 
   def on_create

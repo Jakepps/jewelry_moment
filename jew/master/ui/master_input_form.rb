@@ -3,6 +3,7 @@
 require 'glimmer-dsl-libui'
 require_relative '../controllers/master_input_form_controller_create'
 require './jew/models/master'
+require './jew/util/logger_holder'
 require 'win32api'
 
 class MasterInputForm
@@ -12,6 +13,7 @@ class MasterInputForm
     @item = existing_student.to_hash unless existing_student.nil?
     @controller = controller
     @entries = {}
+    LoggerHolder.instance.debug('MasterInputForm: initialized')
   end
 
   def on_create
@@ -43,6 +45,7 @@ class MasterInputForm
             values.transform_values! { |v| v.empty? ? nil : v}
 
             @controller.process_fields(values)
+            LoggerHolder.instance.debug('MasterInputForm: adding/edit master to DB')
           }
         }
       }

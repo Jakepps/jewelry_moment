@@ -43,6 +43,7 @@ class CustomerInputForm
             values.transform_values! { |v| v.empty? ? nil : v}
 
             @controller.process_fields(values)
+            LoggerHolder.instance.debug('CustomerInputForm: adding/edit customer to DB')
           }
         }
       }

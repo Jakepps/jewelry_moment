@@ -11,6 +11,7 @@ class MasterListController
 
   attr_reader :state_notifier;
   def initialize(view)
+    LoggerHolder.instance.debug('MasterListController: init start')
     @view = view
     @state_notifier = ListStateNotifier.new
     @state_notifier.add_listener(@view)
@@ -21,9 +22,8 @@ class MasterListController
 
     @father_name_filter_columns = [nil, true, false]
     @father_name_filter = @father_name_filter_columns.first
+    LoggerHolder.instance.debug('MasterListController: init done')
   end
-
-
 
   def on_view_created
     # begin
@@ -38,6 +38,7 @@ class MasterListController
   end
 
   def show_modal_add
+    LoggerHolder.instance.debug('MasterListController: showing modal (add)')
     controller = MasterInputFormControllerCreate.new(self)
     view = MasterInputForm.new(controller)
     controller.set_view(view)
@@ -57,6 +58,7 @@ class MasterListController
 
   def delete_selected(current_page, per_page, selected_row)
     begin
+      LoggerHolder.instance.debug('MasterListController: deleting selected master')
       item = @state_notifier.get(selected_row)
       @author_rep.delete(item.author_id)
       @state_notifier.delete(item)
@@ -67,12 +69,7 @@ class MasterListController
   end
 
   def refresh_data(page, per_page)
-    # begin
-    #   @data_list = @student_rep.paginated_short_students(page, per_page, @data_list)
-    #   @view.update_student_count(@student_rep.student_count)
-    # rescue
-    #   on_db_conn_error
-    # end
+    LoggerHolder.instance.debug('MasterListController: refreshing data...')
     items = @author_rep.get_list(per_page, page, @sort_by, 'ASC', @father_name_filter)
     @state_notifier.set_all(items)
     @view.update_student_count(@author_rep.count)
@@ -88,10 +85,11 @@ class MasterListController
     refresh_data(page, per_page)
   end
 
-
   private
 
-  def on_db_conn_error
+  def on_db_conn_error(error)
+    LoggerHolder.instance.error('MasterListController: DB connection error:')
+    LoggerHolder.instance.error(error.message)
     api = Win32API.new('user32', 'MessageBox', ['L', 'P', 'P', 'L'], 'I')
     api.call(0, "No connection to DB", "Error", 0)
     exit(false)
