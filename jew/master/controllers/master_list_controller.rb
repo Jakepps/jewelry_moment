@@ -60,7 +60,7 @@ class MasterListController
     begin
       LoggerHolder.instance.debug('MasterListController: deleting selected master')
       item = @state_notifier.get(selected_row)
-      @author_rep.delete(item.author_id)
+      @author_rep.delete(item.master_id)
       @state_notifier.delete(item)
     rescue
       api = Win32API.new('user32', 'MessageBox', ['L', 'P', 'P', 'L'], 'I')

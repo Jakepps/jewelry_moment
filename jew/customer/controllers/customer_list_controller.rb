@@ -62,7 +62,7 @@ class CustomerListController
     begin
       LoggerHolder.instance.debug('CustomerListController: deleting selected master')
       item = @state_notifier.get(selected_row)
-      @publisher_rep.delete(item.publisher_id)
+      @publisher_rep.delete(item.customer_id)
       @state_notifier.delete(item)
     rescue
       api = Win32API.new('user32', 'MessageBox', ['L', 'P', 'P', 'L'], 'I')
