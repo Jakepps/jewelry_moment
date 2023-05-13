@@ -76,12 +76,16 @@ class MasterListController
   end
 
   def sort(page, per_page, sort_index)
+    LoggerHolder.instance.debug('MasterListController: filter start...')
     @sort_by = @sort_columns[sort_index]
     refresh_data(page, per_page)
+    LoggerHolder.instance.debug('MasterListController: filter end.')
   end
 
   def filter_father_name(page, per_page, filter_index)
+    LoggerHolder.instance.debug('MasterListController: filter start...')
     @father_name_filter = @father_name_filter_columns[filter_index]
+    LoggerHolder.instance.debug('MasterListController: filter end.')
     refresh_data(page, per_page)
   end
 

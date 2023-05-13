@@ -78,13 +78,17 @@ class CustomerListController
   end
 
   def sort(page, per_page, sort_index)
+    LoggerHolder.instance.debug('CustomerListController: filter start...')
     @sort_by = @sort_columns[sort_index]
     refresh_data(page, per_page)
+    LoggerHolder.instance.debug('CustomerListController: filter end.')
   end
 
   def filter_email(page, per_page, filter_index)
+    LoggerHolder.instance.debug('CustomerListController: filter start...')
     @email_filter = @email_filter_columns[filter_index]
     refresh_data(page, per_page)
+    LoggerHolder.instance.debug('CustomerListController: filter end.')
   end
 
 
