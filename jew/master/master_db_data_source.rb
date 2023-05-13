@@ -6,6 +6,7 @@ class MasterDBDataSource
     @client = DBClient.instance
   end
 
+  # добавляет нового мастера в базу данных, возвращает созданную запись.
   def add(master)
     query = "INSERT INTO Master (FirstName, LastName, FatherName) VALUES ('#{master.first_name}', '#{master.last_name}', #{master.father_name.nil? ? 'NULL' : "'#{master.father_name}'"})"
     @client.query(query)
@@ -13,17 +14,20 @@ class MasterDBDataSource
     get(master_id)
   end
 
+  #  изменяет данные об мастере в базе данных, возвращает измененную запись.
   def change(master)
     query = "UPDATE Master SET FirstName='#{master.first_name}', LastName='#{master.last_name}', FatherName=#{master.father_name.nil? ? 'NULL' : "'#{master.father_name}'"} WHERE MasterID=#{master.master_id}"
     @client.query(query)
     get(master.master_id)
   end
 
+  # удаляет запись об мастере из базы данных.
   def delete(id)
     query = "DELETE FROM Master WHERE MasterID=#{id}"
     @client.query(query)
   end
 
+  #  возвращает запись об мастере по заданному id.
   def get(id)
     query = "SELECT * FROM Master WHERE MasterID=#{id}"
     result = @client.query(query).first
@@ -34,6 +38,8 @@ class MasterDBDataSource
     end
   end
 
+  # возвращает список авторов с учетом фильтра по наличию отчества и сортировки, позволяет задавать количество элементов
+  # на странице и номер страницы.
   def get_list(page_size, page_num, sort_field, sort_direction, has_father_name = nil)
     offset = (page_num - 1) * page_size
     query = "SELECT * FROM Master"
@@ -55,7 +61,7 @@ class MasterDBDataSource
     masters
   end
 
-
+  # возвращает количество записей об авторах в базе данных.
   def count
     query = "SELECT COUNT(*) FROM Master"
     result = @client.query(query).first

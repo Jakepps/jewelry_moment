@@ -60,13 +60,15 @@ class CustomerListController
 
   def delete_selected(current_page, per_page, selected_row)
     begin
-      LoggerHolder.instance.debug('CustomerListController: deleting selected master')
+      LoggerHolder.instance.debug('CustomerListController: deleting selected customer...')
       item = @state_notifier.get(selected_row)
       @publisher_rep.delete(item.customer_id)
       @state_notifier.delete(item)
+      LoggerHolder.instance.debug('CustomerListController: deleting selected customer done')
     rescue
       api = Win32API.new('user32', 'MessageBox', ['L', 'P', 'P', 'L'], 'I')
       api.call(0, "You cannot delete the customer because it is associated with some product", "Error", 0)
+      LoggerHolder.instance.debug('CustomerListController: deleting selected customer error')
     end
   end
 

@@ -7,6 +7,9 @@ require_relative 'master_input_form_controller_edit'
 require_relative '../master_db_data_source'
 require 'win32api'
 
+# Класс AuthorListController отвечает за управление списком
+# авторов, используя различные методы для обновления данных и
+# взаимодействия с пользовательским интерфейсом.
 class MasterListController
 
   attr_reader :state_notifier;
@@ -37,6 +40,8 @@ class MasterListController
     @view.create.show
   end
 
+  # метод, который создает контроллер AuthorInputFormControllerEdit, представление AuthorInputForm, устанавливает связи
+  # между ними и показывает модальное окно.
   def show_modal_add
     LoggerHolder.instance.debug('MasterListController: showing modal (add)')
     controller = MasterInputFormControllerCreate.new(self)
@@ -56,18 +61,23 @@ class MasterListController
     view.create.show
   end
 
+  # метод, который получает выбранный элемент из state_notifier, удаляет его из базы данных и из state_notifier
   def delete_selected(current_page, per_page, selected_row)
     begin
-      LoggerHolder.instance.debug('MasterListController: deleting selected master')
+      LoggerHolder.instance.debug('MasterListController: deleting selected master...')
       item = @state_notifier.get(selected_row)
       @author_rep.delete(item.master_id)
       @state_notifier.delete(item)
+      LoggerHolder.instance.debug('MasterListController: deleting selected master done')
     rescue
       api = Win32API.new('user32', 'MessageBox', ['L', 'P', 'P', 'L'], 'I')
       api.call(0, "You cannot delete the master because it is associated with some product", "Error", 0)
+      LoggerHolder.instance.debug('MasterListController: deleting selected master error')
     end
   end
 
+  # метод, который получает список авторов из базы данных, устанавливает их в state_notifier
+  # и обновляет пользовательский интерфейс
   def refresh_data(page, per_page)
     LoggerHolder.instance.debug('MasterListController: refreshing data...')
     items = @author_rep.get_list(per_page, page, @sort_by, 'ASC', @father_name_filter)
